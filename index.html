@@ -5,10 +5,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- <link rel="stylesheet" type="text/css"
-        href="../../Hsein Bitar_FSWO4_E_commerce_electronJS 08062022/ecom-electron/theme.css" media="screen" /> -->
     <link rel="stylesheet" type="text/css" href="./theme.css" media="screen" />
-    <!-- <link rel="stylesheet" href="theme.css"> -->
     <!-- TODO fix css -->
     <script defer src="./render.js"></script>
     <title>Ecom</title>
@@ -31,6 +28,17 @@
             /* border-left: 1px solid;
             border-right: 1px solid; */
         }
+
+        #filters {
+            margin: auto;
+            display: flex;
+            justify-content: space-around;
+        }
+
+        #filters>input {
+            margin: 0px 50px;
+            /* border: 1px solid red; */
+        }
     </style>
 </head>
 
@@ -45,13 +53,16 @@
         </div>
     </nav>
     <hr>
-    <div id="categories-wrapper">
-        <ul id="categories">
-            <li onclick="define()" id="cat1" class="active"> <a href="#">cat1</a></li>
-            <li onclick="define()" id="cat2"> <a href="#">cat2</a></li>
-            <li onclick="define()" id="cat3"> <a href="#">cat3</a></li>
-        </ul>
-    </div>
+    <!-- <div id="filters">
+        <input type="text" placeholder="Search">
+        <div id="categories-wrapper">
+            <ul id="categories">
+                <li onclick="define()" id="cat1" class="active">cat1</li>
+                <li onclick="define()" id="cat2">cat2</li>
+                <li onclick="define()" id="cat3">cat3</li>
+            </ul>
+        </div>
+    </div> -->
     <div class="wrapper" id="wrapper">
     </div>
 </body>
