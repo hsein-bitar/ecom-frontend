@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- <link rel="stylesheet" type="text/css"
+        href="../../Hsein Bitar_FSWO4_E_commerce_electronJS 08062022/ecom-electron/theme.css" media="screen" /> -->
+    <link rel="stylesheet" type="text/css" href="./theme.css" media="screen" />
+    <!-- <link rel="stylesheet" href="theme.css"> -->
+    <!-- TODO fix css -->
+    <script defer src="./render.js"></script>
+    <title>Ecom</title>
+    <style>
+        #categories-wrapper {
+            width: 100%;
+            /* border: 1px solid red; */
+        }
+
+        #categories {
+            margin-top: 10px;
+            list-style: none;
+            display: flex;
+            justify-content: center;
+        }
+
+        #categories>li {
+            /* margin: 10px 20px; */
+            padding: 5px 40px;
+            /* border-left: 1px solid;
+            border-right: 1px solid; */
+        }
+    </style>
+</head>
+
+<body>
+    <nav>
+        <div class="nav-wrapper">
+            <div>
+                <a class="brand-logo center">Ecom <span>- Buy anything</span></a>
+            </div>
+            <div id="links">
+            </div>
+        </div>
+    </nav>
+    <hr>
+    <div id="categories-wrapper">
+        <ul id="categories">
+            <li onclick="define()" id="cat1" class="active"> <a href="#">cat1</a></li>
+            <li onclick="define()" id="cat2"> <a href="#">cat2</a></li>
+            <li onclick="define()" id="cat3"> <a href="#">cat3</a></li>
+        </ul>
+    </div>
+    <div class="wrapper" id="wrapper">
+    </div>
+</body>
+
+</html>
