@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="./theme.css" media="screen" />
+    <!-- TODO fix css -->
+    <script defer src="./render.js"></script>
+    <script defer src="./item.js"></script>
+    <title>Ecom</title>
+    <style>
+        /* overrides */
+        .wrapper {
+            /* border: 1px solid red; */
+            overflow-y: scroll;
+        }
+
+        textarea {
+            border-radius: 15px;
+            background-color: aliceblue;
+            height: 100px;
+            margin-right: 20px;
+            border: 1px solid var(--mid);
+        }
+
+        form {
+            margin: 0px 0px;
+            height: 250px;
+            width: auto;
+        }
+
+        form button {
+            align-items: center;
+            text-align: center;
+            align-self: flex-end;
+            margin-right: 20px;
+        }
+
+        /* end overrides */
+
+        .item-wrapper {
+            padding-top: 20px;
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+        }
+
+        .item-details {
+            display: flex;
+            width: 100%;
+        }
+
+        .item-details img {
+            width: 100%;
+            max-height: 300px;
+            object-fit: cover;
+        }
+
+        .details>* {
+            margin: 15px 0px;
+            text-align: justify;
+        }
+
+        .details {
+            width: 100%;
+            padding: 0px 20px;
+        }
+
+        .review {
+            margin-right: 20px;
+            margin-bottom: 10px;
+            border-radius: 15px;
+            padding: 20px;
+        }
+
+        .review:nth-child(odd) {
+            background-color: rgb(201, 201, 201);
+        }
+
+        /* Hide scrollbar for Chrome, Safari and Opera */
+        .review::-webkit-scrollbar {
+            display: none;
+        }
+
+        .user-and-rating {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+        }
+
+        .review-text {
+            margin-top: 10px;
+        }
+
+        .checked {
+            color: rgb(255, 145, 0);
+        }
+
+        #rating-and-button {
+            margin-top: 0;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        /* styling the stars input rating element */
+
+        .rating-input {
+            unicode-bidi: bidi-override;
+            direction: rtl;
+            text-align: left;
+        }
+
+        .rating-input label {
+            display: inline-block;
+            width: 24px;
+            height: 24px;
+            background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAMAAABg3Am1AAAAyVBMVEXGxsb+/v6zs7O8vLy7u7u6urrCwsL////AwMC5ubm/v7+9vb3Dw8O+vr7ExMS3t7fBwcG4uLi1tbW0tLTFxcW2traysrLg4ODt7e37+/vY2Njn5+fU1NT9/f35+fnr6+v19fXk5OTKysrHx8fi4uLa2trc3Nz39/fv7+/R0dHu7u7Ly8ve3t7Pz8/p6enl5eXT09PNzc38/Pzy8vLJycnZ2dnV1dXj4+Pq6urd3d3b29v09PTm5ubQ0NDIyMjX19fW1tbx8fH///9F+zTWAAAAQ3RSTlP///////////////////////////////////////////////////////////////////////////////////////8AQWIE7wAAAa5JREFUeNqV09dygzAQQNEVanQMGNy7nd57L/r/j0owtpMgiYj7xgyHWRVAqEMToU4HZocNwbHTDPAs6jYCg9i7awROAx83AnEbsusGYBIB4H4DcOEBMLsBICEAJGNjcJDBd2TPGLzjArRCYxD4UGSNDME0gXW0YwhWuAT2whAwBmUpMgK9HDY5MwVAUntkC+w5koLzyKpEfNiGrWp9EGNG2mAWdibFGvgwb4FBIV2MhIDN7wL/5lq3P7vU8/8dC9Pun239yO36cd5Q5RzOYlw3zpN8cFchDXXjkCPlSfct5Vg+nSPN1XhwFGMF6aP+Lo3Alb6PD+ouXzeS5l+JOjCUTpCxWoB9qJb3asB1BlLkpAb0sQxaUANsBnIW0oL9ZLdUau02mC61YPdzesnyCG8f7BstCFubdbpTIdCcllvWTrkGXFnlKp3D8o2TNIAi51wDOnQ9TjYTmz699VjupQYs7GIce1/s4peUAbQjrgQoLca54OJ3nWKs+EwJ7h3wohdR6TkgELwqwbFL2FhI8VPKHBXgST7kQtUyiboKMIgHQtPUHSpApye08ZUEjPsCKj+LDQz5xjYAAAAASUVORK5CYII=) no-repeat 0 0;
+            background-size: 24px 24px;
+            font-size: 0;
+            cursor: pointer;
+        }
+
+        .rating-input input {
+            display: none;
+        }
+
+        .rating-input input:checked+label,
+        .rating-input input:checked~input+label {
+            background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAMAAABg3Am1AAABgFBMVEXRXzXs0sT//v779fLu2MzSYTT0akL58e326ePqYkLy4tnmxbPqzb3dYTq6XizYpIntZELhYj37bkPcrpW6XCvCXS3esZrNYTHbZjf1bUDoybjJgVvLhmHZYDnKXjLmaDvNXjPGXi/GeVD9+vjBbUHlwa7Pjmv37Ofw3dPqZUDhZTvaqY7MiWXlZT7CcUb+/v3VnX+8YzPeZDnYYza9ZTbftJ7OXjTQkG/XYTfhuqTsaj7UYjTXoYS/aTvUYDe7YTHwaz/kYz7XYjfXYzXWXzj2a0P0aUP8+Pb2akPxZ0O9XCvzaEPyaEPvZUPyZ0PvZkPuZULsY0LwZkPwZ0P4bEP3a0P5bUP6bUP5bEP8b0Pjvan05d2+ZznAaj39cEPIfVXHfFTRlHTt1cjbq5LEdErFd079+/r15+Drz8HgtqDvaUDy39bqZj/lZzzwaUDHXTDYZDXtZ0DfZzj47+nIf1jJYC/yaULuZ0HTmHnUmXrw28+7Xy7VYTb4bkH5bkP///8s9V56AAAAgHRSTlP/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////ADgFS2cAAAIJSURBVHjaldX5V9owAMDxGmBQrtoRUDkqyI2MgUKZ4jyQ6e6NjW2WS0R0p5vTuUPY8q+7duWN1ya1/f7UNPn8kCbvlUL4on2EjwQceYOg3DEGQOHi0hBwzpwxhsCv+bmcEQDav7sRuwHQv+h2Zz0GwNqZIGwuGACxOUEQvDbdIBW5+bfTkm6wOCuC1YBuMNgUwR9o1Qla3jdSlaZO4Dt9LTWf1Ql6q3tSjWFUF0jCxr/2ZhwYsKuqtN2QO0moZyl/8aGiyodX47aVc/CQQrZe5cY9fS13+uIeAANP9Cz/XAla5U0728v3ry3j9vz/Sslvlu/XrK/GzJOfFSzCzI5GXy1Zk+Ic3t2tktcvuX3qgzsPWH48wjeKXeJOGhzCzGNMn6iEiXA1pjqjp6pcw/fku2QNLj1QlM6ltC6fOaIEIx/SAkz1paJb+5ogl36hDCY1gN37TBW1ogE8609UsUENsLD1XJ3bRAQ277QcG4ah8XM4TgQlSl5zpxBP5cYDV4IIAuy0FHXUQiha5rekUXrjmADOYV2M5fJAGq8MQ9ILzk8ATV6crhUdSO7jgBLfhA4IIOuq12m+93bib30QZus0XQRYEHXTtItbA2iy5kaNpr9MYYGDo9eLfqTIPuDpWh4LyiF+34ZUHf/k2A4OgAJkAMIVL0TMGOBsOxGh1hGDAc0kInbbpwAGugICsJ4iKYYBmgAAAABJRU5ErkJggg==);
+        }
+    </style>
+</head>
+
+<body>
+    <nav>
+        <div class="nav-wrapper">
+            <div>
+                <a class="brand-logo center">Ecom <span>- Buy anything</span></a>
+            </div>
+            <div id="links">
+                <ul>
+                    <li onclick="logout()" id="logout"> <a href="#">Logout</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <hr>
+    <div class="wrapper" id="wrapper">
+        <div class="item-wrapper">
+        </div>
+        <form action="" class="review-form">
+            <label for="review-text">Enter a review</label>
+            <textarea name="review-text" id="review-text" cols="30" rows="10" required></textarea>
+            <div id="rating-and-button">
+                <div class="rating-input">
+                    <input type="radio" name="any_name" value="5" id="sel-rating-5"><label for="sel-rating-5">5</label>
+                    <input type="radio" name="any_name" value="4" id="sel-rating-4" checked><label
+                        for="sel-rating-4">4</label>
+                    <input type="radio" name="any_name" value="3" id="sel-rating-3"><label for="sel-rating-3">3</label>
+                    <input type="radio" name="any_name" value="2" id="sel-rating-2"><label for="sel-rating-2">2</label>
+                    <input type="radio" name="any_name" value="1" id="sel-rating-1"><label for="sel-rating-1">1</label>
+                </div>
+                <button id="submit-review" onclick="submitReview()" type="button">Submit</button>
+            </div>
+        </form>
+        <div class="reviews">
+        </div>
+    </div>
+</body>
+
+</html>

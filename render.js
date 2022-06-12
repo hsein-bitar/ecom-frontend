@@ -1,3 +1,18 @@
+// convert score to stars rating on restaurant cards
+let generateRating = (score) => {
+    let rating_html_string = '';
+    let i = 0;
+    while (i < score) {
+        rating_html_string += '<span class="fa fa-star checked"></span>';
+        i++;
+    }
+    while (i < 5) {
+        rating_html_string += '<span class="fa fa-star"></span>';
+        i++;
+    }
+    return rating_html_string;
+}
+
 function displayMessage(message, theme) {
     let className;
     if (theme == 0) { className = 'good' } else { className = 'bad' }
@@ -16,6 +31,22 @@ function displayMessage(message, theme) {
     setTimeout(() => {
         document.getElementById('message_key').parentNode.removeChild(document.getElementById('message_key'));
     }, 1000)
+}
+
+function logout() {
+    fetch('http://localhost:8000/api/v1/users/logout', {
+        method: 'post',
+        headers: new Headers({
+            'Authorization': 'Bearer ' + localStorage.getItem('user_token'),
+        }),
+    }).then(response => response.json())
+        .then(response => {
+            if (response.status == 'success') {
+                displayMessage('Logout Successful', 0)
+                localStorage.removeItem('user_token');
+                outlinks();
+            }
+        })
 }
 
 // fired when user submits register form
@@ -78,22 +109,40 @@ function submitLogin() {
 
 }
 
-function populateHome() {
+function toggleMyLike(e) {
+    // toggles user like on a post amd increments the like-count
+    console.log(e);
+}
+
+function populateWrapper() {
     let links = document.getElementById('in').children
     for (let link of links) {
         link.classList.remove('active')
     }
-    // set home active
     document.getElementById('home').classList.add('active')
     // add none to all forms
     let wrapper = document.getElementById("wrapper");
     wrapper.innerHTML = "";
+    let data = new FormData();
+
+    // get search string
+    data.append('search', document.getElementById('search').value)
+    // get active category
+    let categories = document.getElementsByClassName('category')
+    for (let category of categories) {
+        if (category.classList.contains('active')) {
+            data.append('category_id', category.id)
+            break;
+        }
+    }
     fetch('http://localhost:8000/api/v1/items/', {
         method: 'post',
         headers: new Headers({
             'Authorization': 'Bearer ' + localStorage.getItem('user_token'),
-        })
-    }).then(response => response.json())
+        }),
+        body: data
+    })
+        .then(response => response.json())
         .then(response => {
             if (response.status == 'success') {
                 let gallery = document.createElement("div");
@@ -102,20 +151,22 @@ function populateHome() {
                 let items = '';
                 response.items.forEach(element => {
                     let item = `
-          <div class="item">
-            <a href="#" id=${element.id}>
-              <div class="gradient">
-                <span class="caption">
-                  ${element.title} 
-                  <div class="rating">
+                    <div class="item">
+                    <div class="gradient">
+                    <div class="likes-count">
+                    ${element.likes_count}<i class="fa fa-heart" onclick="toggleMyLike(this)"></i>
                     </div>
-                    </span>
+                    <a href="./item.html?item_id=${element.id}" id=${element.id}>
+                        <span class="caption">
+                                ${element.title} 
+                            </span>
+                            </a>
+                        </div>
+                        <img src="${element.image_uri}" />
                     </div>
-                    <img src="${element.image_uri}" />
-                    </a>
-                    </div>
-                    `;
+                        `;
                     items += item;
+
                 });
                 gallery.innerHTML = items;
                 wrapper.appendChild(gallery);
@@ -124,6 +175,58 @@ function populateHome() {
             displayMessage('Invalid server response', 1);
             console.log(error);
         })
+}
+
+function search(ele) {
+    if (ele.keyCode === 13) {
+        populateWrapper();
+    }
+}
+function activateCategory(ee) {
+    let bool = ee.classList.contains('active') ? 0 : 1;
+    let categories = document.getElementsByClassName('category')
+    for (let category of categories) {
+        category.classList.remove('active')
+    }
+    if (bool) {
+        ee.classList.add('active')
+    }
+    populateWrapper();
+}
+function populateHome() {
+    let filters = document.getElementById('filters');
+    if (filters) { filters.parentNode.removeChild(filters) }
+    fetch('http://localhost:8000/api/v1/categories', {
+        method: 'get',
+        headers: new Headers({
+            'Authorization': 'Bearer ' + localStorage.getItem('user_token')
+        })
+    }).then(response => response.json())
+        .then(response => {
+            let filters = document.createElement("div");
+            filters.id = 'filters'
+            let categories = '';
+            response.categories.forEach(i => {
+                let category = `
+                <li class="category" onclick="activateCategory(this)" id=${i.id}>${i.name}</li>
+                `;
+                categories += category;
+            })
+            filters.innerHTML = `
+            <input type="text" id="search" onkeypress="search(event)" placeholder="Search">
+        <div id="categories-wrapper">
+            <ul id="categories">
+               ${categories}
+            </ul>
+        </div>
+            `;
+            let hr = document.getElementsByTagName('hr')[0];
+            hr.after(filters);
+        }).catch(error => {
+            displayMessage('Invalid server response', 1);
+            outlinks();
+            console.log(error);
+        }).then(() => populateWrapper())
 }
 
 function addItemForm() {
@@ -336,8 +439,11 @@ function inlinks() {
       <li onclick="logout()" id="logout"> <a href="#">Logout</a></li>
     </ul>
       `;
-    setTimeout(populateHome, 1000)
-
-
+    populateHome();
 }
-window.onload = outlinks;
+
+if (localStorage.getItem('user_token')) {
+    window.onload = inlinks;
+} else {
+    window.onload = outlinks;
+}
