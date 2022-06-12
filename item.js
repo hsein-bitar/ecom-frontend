@@ -66,7 +66,7 @@ function populateItem() {
                     let review = `
                         <div class="review">
                         <div class="user-and-rating">
-                        <div class="user">${i.user_id}</div >
+                        <div class="user">User-ID:${i.user_id}</div >
                         <div class="rating">${generateRating(i.rating)}</div>
                         </div >
                         <div class="review-text">${i.text}</div>

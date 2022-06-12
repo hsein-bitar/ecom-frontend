@@ -44,7 +44,9 @@ function logout() {
             if (response.status == 'success') {
                 displayMessage('Logout Successful', 0)
                 localStorage.removeItem('user_token');
-                outlinks();
+                setTimeout(() => {
+                    window.location.href = './index.html'
+                }, 1000)
             }
         })
 }
@@ -66,6 +68,7 @@ function submitRegister() {
             if (response.status = 'success') {
                 displayMessage('User Created', 0)
                 localStorage.setItem('user_token', response.authorisation.token);
+                localStorage.setItem('user_id', response.user.id);
                 inlinks();
             } else {
                 displayMessage('Could not register', 1);
@@ -95,6 +98,7 @@ function submitLogin() {
                     console.log(response);
                     displayMessage('Login Successful', 0)
                     localStorage.setItem('user_token', response.authorisation.token);
+                    localStorage.setItem('user_id', response.user.id);
                     inlinks();
                 }
             } else {
@@ -109,9 +113,43 @@ function submitLogin() {
 
 }
 
-function toggleMyLike(e) {
-    // toggles user like on a post amd increments the like-count
-    console.log(e);
+function toggleMyLike(heart) {
+    let increment = heart.classList.contains('liked') ? -1 : 1
+    console.log(heart.parentNode.innerText);
+    let data = new FormData();
+    data.append('item_id', heart.dataset.itemId)
+    fetch('http://localhost:8000/api/v1/likes/toggle', {
+        method: 'post',
+        headers: new Headers({
+            'Authorization': 'Bearer ' + localStorage.getItem('user_token'),
+        }),
+        body: data
+    })
+        .then(response => response.json())
+        .then(response => {
+            console.log(response);
+            if (response.status == 'success') {
+                // toggles user like on a post and // increments the like-count
+                heart.classList.toggle('liked');
+                heart.parentNode.getElementsByTagName('span')[0].innerText = parseInt(heart.parentNode.getElementsByTagName('span')[0].innerText) + increment;
+            }
+        }).catch(error => {
+            console.log(error);
+        })
+}
+
+function checkIfLiked(element) {
+    let fill = '';
+    console.log(element);
+    // user item likes
+    element.likes.forEach(like => {
+        console.log(like.user_id, localStorage.getItem('user_id'));
+        if (like.user_id == localStorage.getItem('user_id')) {
+            console.log('fuiredd');
+            fill = 'liked'
+        }
+    })
+    return fill
 }
 
 function populateWrapper() {
@@ -153,16 +191,20 @@ function populateWrapper() {
                     let item = `
                     <div class="item">
                     <div class="gradient">
+                    <h3 class="price">$${element.price}</h3>
                     <div class="likes-count">
-                    ${element.likes_count}<i class="fa fa-heart" onclick="toggleMyLike(this)"></i>
+                    <div>
+                    <i class="fa fa-heart ${checkIfLiked(element)}" data-item-id=${element.id} onclick="toggleMyLike(this)"></i>
+                    <span>${element.likes_count}</span>
+                    </div>
                     </div>
                     <a href="./item.html?item_id=${element.id}" id=${element.id}>
-                        <span class="caption">
-                                ${element.title} 
-                            </span>
-                            </a>
-                        </div>
-                        <img src="${element.image_uri}" />
+                    <span class="caption">
+                    ${element.title} 
+                    </span>
+                    </a>
+                    </div>
+                    <img src="${element.image_uri}" />
                     </div>
                         `;
                     items += item;
@@ -420,6 +462,8 @@ function addRegisterForm() {
 }
 
 function outlinks() {
+    let filters = document.getElementById('filters');
+    if (filters) { filters.parentNode.removeChild(filters) }
     let links = document.getElementById('links');
     links.innerHTML = `
     <ul id="out" class="">
