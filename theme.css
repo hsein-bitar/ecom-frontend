@@ -447,6 +447,16 @@ h3.price {
     font-size: 1.6rem;
 }
 
+@media only screen and (max-width: 600px) {
+
+    h3.price {
+        position: absolute;
+        top: 20px;
+        font-size: 1.6rem;
+    }
+
+
+}
 
 /* index */
 

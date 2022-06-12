@@ -1,3 +1,17 @@
+let favorites = 0;
+function getFavorites(element) {
+    console.log(element);
+    favorites = 1 - favorites;
+    populateWrapper();
+    if (favorites) {
+        element.classList.add('active')
+
+    } else {
+        element.classList.remove('active')
+    }
+
+}
+
 // convert score to stars rating on restaurant cards
 let generateRating = (score) => {
     let rating_html_string = '';
@@ -140,12 +154,9 @@ function toggleMyLike(heart) {
 
 function checkIfLiked(element) {
     let fill = '';
-    console.log(element);
     // user item likes
     element.likes.forEach(like => {
-        console.log(like.user_id, localStorage.getItem('user_id'));
         if (like.user_id == localStorage.getItem('user_id')) {
-            console.log('fuiredd');
             fill = 'liked'
         }
     })
@@ -158,6 +169,8 @@ function populateWrapper() {
         link.classList.remove('active')
     }
     document.getElementById('home').classList.add('active')
+    let element = document.getElementById('favorites')
+    if (favorites) { element.classList.add('active') }
     // add none to all forms
     let wrapper = document.getElementById("wrapper");
     wrapper.innerHTML = "";
@@ -187,7 +200,23 @@ function populateWrapper() {
                 gallery.id = 'gallery'
                 gallery.classList.add('gallery')
                 let items = '';
-                response.items.forEach(element => {
+                // favorites intervention
+                let items_to_dom;
+                if (favorites) {
+                    items_to_dom = response.items.filter((i) => {
+                        let bool = false;
+                        i.likes.forEach(like => {
+                            if (like.user_id == localStorage.getItem('user_id')) {
+                                bool = true;
+                                return bool;
+                            }
+                        })
+                        return bool;
+                    })
+                } else {
+                    items_to_dom = response.items
+                }
+                items_to_dom.forEach(element => {
                     let item = `
                     <div class="item">
                     <div class="gradient">
@@ -479,7 +508,7 @@ function inlinks() {
     links.innerHTML = `
     <ul id="in">
       <li onclick="populateHome()" id="home"> <a href="#">Home</a></li>
-      <li onclick="getFavorites()" id="favorites"> <a href="#">Favorites</a></li>
+      <li onclick="getFavorites(this)" id="favorites"> <a href="#">Favorites</a></li>
       <li onclick="logout()" id="logout"> <a href="#">Logout</a></li>
     </ul>
       `;
