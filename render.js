@@ -220,18 +220,18 @@ function populateWrapper() {
                     let item = `
                     <div class="item">
                     <div class="gradient">
-                    <h3 class="price">$${element.price}</h3>
-                    <div class="likes-count">
-                    <div>
-                    <i class="fa fa-heart ${checkIfLiked(element)}" data-item-id=${element.id} onclick="toggleMyLike(this)"></i>
-                    <span>${element.likes_count}</span>
-                    </div>
-                    </div>
-                    <a href="./item.html?item_id=${element.id}" id=${element.id}>
-                    <span class="caption">
-                    ${element.title} 
-                    </span>
-                    </a>
+                        <h3 class="price">$${element.price}</h3>
+                        <div class="likes-count">
+                            <div>
+                            <i class="fa fa-heart ${checkIfLiked(element)}" data-item-id=${element.id} onclick="toggleMyLike(this)"></i>
+                            <span>${element.likes_count}</span>
+                            </div>
+                        </div>
+                        <a href="./item.html?item_id=${element.id}" id=${element.id}>
+                            <span class="caption">
+                            ${element.title} 
+                            </span>
+                        </a>
                     </div>
                     <img src="${element.image_uri}" />
                     </div>

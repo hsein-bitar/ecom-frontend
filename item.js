@@ -59,7 +59,8 @@ function populateItem() {
                         <h3 class="price">$${item.price}</h3>
                         <h3>${item.title}</h3>
                         <h4>${item.details}</h4>
-                        <h3> ${item.likes_count} <i class="fa fa-heart"></i> Likes</h3>
+                        <h3> ${item.likes_count} <i class="fa fa-heart ${checkIfLiked(item)}"></i> Likes</h3>
+                        <div class="rating">${generateRating(response.average)}</div>
                     </div>
                     </div>`;
                 item.reviews.forEach((i) => {
